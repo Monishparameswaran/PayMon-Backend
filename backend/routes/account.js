@@ -1,19 +1,31 @@
 // backend/routes/account.js
 const express = require('express');
 const { authMiddleware } = require('../middleware');
-const { Account } = require('../db');
+const { Account,User } = require('../db');
 const { default: mongoose } = require('mongoose');
 
 const router = express.Router();
 
 router.get("/balance", authMiddleware, async (req, res) => {
-    const account = await Account.findOne({
-        userId: req.userId
-    });
-
-    res.json({
-        balance: account.balance
-    })
+    
+    console.log(req.userId);
+    try{
+        const account = await Account.findOne({
+            userId: req.userId
+        });
+        const user = await User.findOne({
+            _id: req.userId
+        });
+        return res.json({
+            balance: account.balance,
+            username: user.firstName
+        })
+    }
+    catch(err){
+        console.log(err);
+    }
+     return res.status(403).json({msg: "cannot find user in the DB"});
+    
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
@@ -21,7 +33,8 @@ router.post("/transfer", authMiddleware, async (req, res) => {
 
     session.startTransaction();
     const { amount, to } = req.body;
-
+    console.log("hello");
+    console.log(amount+" "+to);
     // Fetch the accounts within the transaction
     const account = await Account.findOne({ userId: req.userId }).session(session);
 
