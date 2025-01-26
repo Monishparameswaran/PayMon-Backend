@@ -1,35 +1,35 @@
 // backend/db.js
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://localhost:27017/paytm")
+mongoose.connect("mongodb+srv://admin:5how8HoKUEKibEUG@cluster0.pydstvs.mongodb.net/PaytmClone")
 
 // Create a Schema for Users
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
         unique: true,
         trim: true,
         lowercase: true,
         minLength: 3,
-        maxLength: 30
+        maxLength: 30,
+        required: true
     },
     password: {
         type: String,
-        required: true,
-        minLength: 6
+        minLength: 6,
+        required: true
     },
     firstName: {
         type: String,
-        required: true,
         trim: true,
-        maxLength: 50
+        maxLength: 50,
+        required: true
     },
     lastName: {
         type: String,
-        required: true,
         trim: true,
-        maxLength: 50
+        maxLength: 50,
+        required: true
     }
 });
 
@@ -50,5 +50,5 @@ const User = mongoose.model('User', userSchema);
 
 module.exports = {
 	User,
-    Account
+    Account 
 };
